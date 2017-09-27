@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd"> 
+<mapper namespace="com.luoy.motor.dao.advert.MoAdvertDao">
+   <resultMap type="com.luoy.motor.bean.advert.MoAdvert" id="moAdvertMap">
+  <id property="id" column="ID" />
+      <result property="name" column="NAME"/>
+      <result property="imgUrl" column="IMG_URL"/>
+      <result property="rank" column="RANK"/>
+      <result property="status" column="STATUS"/>
+      <result property="createTime" column="CREATE_TIME"/>
+      <result property="updateTime" column="UPDATE_TIME"/>
+
+   </resultMap>
+
+<insert id="save" parameterType="hashMap">
+          <selectKey resultType="java.lang.Integer" order="AFTER" keyProperty="id">
+       <![CDATA[SELECT LAST_INSERT_ID() AS id ]]>
+      </selectKey>
+                  INSERT INTO mo_advert ( ID ,  NAME ,  IMG_URL ,  RANK ,  STATUS ,  CREATE_TIME ,  UPDATE_TIME)
+      VALUES(#{id},#{name},#{imgUrl},#{rank},#{status},#{createTime},#{updateTime})
+   </insert>
+   
+    <delete id="delete" parameterType="hashMap">
+      DELETE FROM mo_advert  WHERE id = #{id}
+   </delete>
+
+   <update id="update" parameterType="hashMap">
+      UPDATE mo_advert SET NAME=#{name} , IMG_URL=#{imgUrl} , RANK=#{rank} , STATUS=#{status} , CREATE_TIME=#{createTime} , UPDATE_TIME=#{updateTime}      WHERE id = #{id}
+   </update>
+   
+   
+   <select id="load" resultMap="moAdvertMap" parameterType="hashMap">
+      select * from mo_advert where  1=1 
+       <if test="id != null">
+         AND id = #{id}
+       </if>
+          limit 1
+   </select>
+   
+   <select id="findList" resultMap="moAdvertMap" parameterType="hashMap">
+     select * from mo_advert where 1=1
+   </select>
+   
+   <sql id="page_where_sql">
+      where 1=1
+      <if test="status != null">
+         AND STATUS = #{status}
+       </if>
+       order by RANK ASC
+   </sql>
+   
+   <select id="findPageList" resultMap="moAdvertMap" parameterType="hashMap">
+         select * from mo_advert t 
+      <include refid="page_where_sql" />  
+      <if test="mysqlStart != null">
+            limit #{mysqlStart}, #{max}
+      </if>
+    </select>
+   
+   <select id="findPageList_get_row_count" resultType="Integer">
+      SELECT count(t.id) FROM mo_advert t
+      <include refid="page_where_sql" />
+   </select>
+ 
+  <select id="findListForApp" resultMap="moAdvertMap" parameterType="hashMap">
+     select * from mo_advert where STATUS = 'on' order by RANK ASC
+   </select>
+   
+    <update id="updateForStatus" parameterType="hashMap">
+      UPDATE mo_advert SET  STATUS=#{status} ,  UPDATE_TIME=#{updateTime}      WHERE id = #{id}
+   </update>
+   
+</mapper>

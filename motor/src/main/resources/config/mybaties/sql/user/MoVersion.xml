@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd"> 
+<mapper namespace="com.luoy.motor.dao.user.MoVersionDao">
+   <resultMap type="com.luoy.motor.bean.user.MoVersion" id="moVersionMap">
+  <id property="id" column="ID" />
+      <result property="versionName" column="VERSION_NAME"/>
+      <result property="versionCode" column="VERSION_CODE"/>
+      <result property="isForce" column="IS_FORCE"/>
+      <result property="sysType" column="SYS_TYPE"/>
+      <result property="createTime" column="CREATE_TIME"/>
+      <result property="updateTime" column="UPDATE_TIME"/>
+
+   </resultMap>
+
+<insert id="save" parameterType="hashMap">
+          <selectKey resultType="java.lang.Integer" order="AFTER" keyProperty="id">
+       <![CDATA[SELECT LAST_INSERT_ID() AS id ]]>
+      </selectKey>
+                  INSERT INTO mo_version ( ID ,  VERSION_NAME ,  VERSION_CODE ,  IS_FORCE ,  SYS_TYPE ,  CREATE_TIME ,  UPDATE_TIME)
+      VALUES(#{id},#{versionName},#{versionCode},#{isForce},#{sysType},#{createTime},#{updateTime})
+   </insert>
+   
+    <delete id="delete" parameterType="hashMap">
+      DELETE FROM mo_version  WHERE id = #{id}
+   </delete>
+
+   <update id="update" parameterType="hashMap">
+      UPDATE mo_version SET VERSION_NAME=#{versionName} , VERSION_CODE=#{versionCode} , IS_FORCE=#{isForce} , SYS_TYPE=#{sysType} , CREATE_TIME=#{createTime} , UPDATE_TIME=#{updateTime}      WHERE id = #{id}
+   </update>
+   
+   
+   <select id="load" resultMap="moVersionMap" parameterType="hashMap">
+      select * from mo_version where  1=1 
+       <if test="id != null">
+         AND id = #{id}
+       </if>
+     limit 1
+    </select>
+   
+    <select id="loadNewestByType" resultMap="moVersionMap" parameterType="hashMap">
+      select * from mo_version where  SYS_TYPE = #{sysType} order by VERSION_CODE desc
+      limit 1
+    </select>
+    
+   <select id="findList" resultMap="moVersionMap" parameterType="hashMap">
+     select * from mo_version where 1=1
+   </select>
+   
+   <sql id="page_where_sql">
+      where 1=1
+      <!--order by CREATE_TIME DESC-->
+   </sql>
+   
+   <select id="findPageList" resultMap="moVersionMap" parameterType="hashMap">
+         select * from mo_version t 
+      <include refid="page_where_sql" />  
+      <if test="mysqlStart != null">
+            limit #{mysqlStart}, #{max}
+      </if>
+           </select>
+   
+   <select id="findPageList_get_row_count" resultType="Integer">
+      SELECT count(t.id) FROM mo_version t
+      <include refid="page_where_sql" />
+   </select>
+ 
+</mapper>
