@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:aop="http://www.springframework.org/schema/aop"
+    xmlns:mongo="http://www.springframework.org/schema/data/mongo"
+    xmlns:tx="http://www.springframework.org/schema/tx"
+    xsi:schemaLocation="
+     http://www.springframework.org/schema/beans 
+     http://www.springframework.org/schema/beans/spring-beans-4.1.xsd
+      http://www.springframework.org/schema/data/mongo 
+     http://www.springframework.org/schema/data/mongo/spring-mongo.xsd
+     http://www.springframework.org/schema/tx
+     http://www.springframework.org/schema/tx/spring-tx-4.1.xsd
+     http://www.springframework.org/schema/aop 
+     http://www.springframework.org/schema/aop/spring-aop-4.1.xsd"
+    default-lazy-init="true">
+
+ <!-- 定义一个JOB任务，定义好ID，关联好job-->
+     <bean id="jobUserRegistBean" class="org.springframework.scheduling.quartz.JobDetailFactoryBean">  
+        <property name="jobClass">  
+            <value>com.smk.push.quartz.JobUserRegistBean</value>  
+        </property>     
+        <property name="durability" value="true" />     
+        <property name="requestsRecovery" value="true" />  
+        <!--该项目的组名自定义，主要用户多个项目公用一个数据库时区分-->
+        <property name="group" value="smk_push" />    
+    </bean>      
+    
+    <!--定义好 调度器，-->
+    <bean id="jobUserRegistTrigger" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">  
+    <!--需要执行的job的ID-->
+        <property name="jobDetail" ref="jobUserRegistBean" />  
+       <!--执行的时间，cron表达式-->
+        <property name="cronExpression" value="0 */1 * * * ?" />  
+        <!--该项目的组名自定义，主要用户多个项目公用一个数据库时区分-->
+        <property name="group" value="smk_push" />  
+    </bean> 
+
+   <!--调度工厂-->
+    <bean name="quartzScheduler" lazy-init="false" autowire="no" 
+        class="com.cat.common.quartz.RSchedulerFactoryBean">
+        <!--数据库的引用-->
+        <property name="dataSource">
+            <ref bean="smkAppDataSource" />
+        </property>
+        <property name="applicationContextSchedulerContextKey" value="applicationContextKey" />
+
+        <!--配置属性的引用   重写了org.springframework.scheduling.quartz.SchedulerFactoryBean 类自动指定配置文件读取位置-->
+        <!--<property name="configLocation" value="classpath:config/env/quartz.properties" /> -->
+
+        <property name="triggers">
+            <list>
+                <!--添加需要执行的调度器-->
+                <ref bean="jobUserRegistTrigger" />
+           </list>
+        </property>
+    </bean> 
+   
+</beans>

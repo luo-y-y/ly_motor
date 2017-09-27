@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<memcached>  
+ <cachedNodes>
+                <!-- 配置服务cached -->
+                <cachedNode name="common">
+                        <!-- 集群服务列表 -->
+                        <serverList>
+                                <server>192.168.23.212:11211</server>
+                        </serverList>
+                        <!-- 是否采用主备 -->
+                        <isStandy>false</isStandy>
+                        <!-- hash方式 -->
+                        <sessionLocator>net.rubyeye.xmemcached.impl.ArrayMemcachedSessionLocator</sessionLocator>
+                        <!-- 是否启用压缩 -->
+                        <isCompress>true</isCompress>
+                        <compressBytes>17000</compressBytes>
+                        <!-- 连接池 -->
+                        <connectPool>1</connectPool>
+                        <!-- 请求超时时间，单位秒 -->
+                        <requestTimeOut>3</requestTimeOut>
+                </cachedNode>
+
+				<!-- 可以配置多个节点 -->
+                <!--<cachedNode name="low">-->
+                        <!-- 集群服务列表 -->
+                       <!--  <serverList>
+                                <server>10.168.84.23:11211</server>
+                        </serverList>-->
+                        <!-- 是否采用主备 -->
+                       <!-- <isStandy>false</isStandy>-->
+                        <!-- hash方式 -->
+                       <!-- <sessionLocator>net.rubyeye.xmemcached.impl.ArrayMemcachedSessionLocator</sessionLocator>-->
+                        <!-- 是否启用压缩 -->
+                       <!-- <isCompress>true</isCompress>-->
+                       <!-- <compressBytes>17000</compressBytes>-->
+                        <!-- 连接池 -->
+                       <!-- <connectPool>1</connectPool>-->
+                        <!-- 请求超时时间，单位秒 -->
+                       <!-- <requestTimeOut>3</requestTimeOut>-->
+               <!-- </cachedNode> -->
+        </cachedNodes>
+</memcached>

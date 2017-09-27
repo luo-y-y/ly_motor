@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns="http://java.sun.com/xml/ns/javaee" xmlns:web="http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd"
+	version="3.0">
+	<display-name>smk_activity</display-name>
+	<!-- SpringMVC MVC 配置-->
+	<servlet>
+		<servlet-name>actionSpringMVC</servlet-name>
+		<servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+		<init-param>
+			<param-name>contextConfigLocation</param-name>
+			<param-value>classpath:config/spring/spring-action-config.xml</param-value>
+		</init-param>
+		<init-param>  
+            <param-name>dispatchOptionsRequest</param-name>  
+            <param-value>true</param-value>  
+        </init-param> 
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+
+	<servlet-mapping>
+		<servlet-name>actionSpringMVC</servlet-name>
+		<url-pattern>*.ext</url-pattern>
+	</servlet-mapping> 
+	<servlet-mapping>
+		<servlet-name>actionSpringMVC</servlet-name>
+		<url-pattern>*.do</url-pattern>
+	</servlet-mapping> 
+	<servlet-mapping>
+		<servlet-name>actionSpringMVC</servlet-name>
+		<url-pattern>*.in</url-pattern>
+	</servlet-mapping>
+	
+	<!--需要使用spring自带的JSON转换器，添加接口后缀文件类型-->
+	<mime-mapping>
+        <extension>ext</extension>
+        <mime-type>application/json</mime-type>
+    </mime-mapping>
+    <mime-mapping>
+        <extension>do</extension>
+        <mime-type>application/json</mime-type>
+    </mime-mapping>
+    <mime-mapping>
+        <extension>in</extension>
+        <mime-type>application/json</mime-type>
+    </mime-mapping>
+    
+
+
+	<!-- 监听配置文件的加载 -->
+	<context-param>
+		<param-name>env_home</param-name>
+		<param-value>MOTOR_HOME</param-value>
+	</context-param>
+	
+	<!-- 监听配置文件的加载 -->
+	<listener>
+		<listener-class>com.cat.common.listener.FServletContextListener</listener-class>
+	</listener>
+
+	<!-- 加载Spring监听器 -->
+	<listener>
+		<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+	</listener>
+
+	<!-- 定义Spring的配置的位置，可以定义多个配置文件，可以使用通配符 -->
+	<context-param>
+		<param-name>contextConfigLocation</param-name>
+		<param-value>classpath:config/spring/applicationContext.xml</param-value>
+	</context-param>
+
+	<!--配置缓存清除监听器 处理由 JavaBean Introspector功能而引起的缓存泄露 -->
+	<listener>
+		<listener-class>org.springframework.web.util.IntrospectorCleanupListener</listener-class>
+	</listener>
+
+	<!-- request监听 -->
+	<listener>
+		<listener-class>org.springframework.web.context.request.RequestContextListener</listener-class>
+	</listener>
+
+	<!--配置编码过滤 -->
+	<filter>
+		<filter-name>encodingFilter</filter-name>
+		<filter-class>com.cat.common.filter.EncodingFilter</filter-class>
+		<init-param>
+			<param-name>encoding</param-name>
+			<param-value>UTF-8</param-value>
+		</init-param>
+	</filter>
+
+	<filter-mapping>
+		<filter-name>encodingFilter</filter-name>
+		<url-pattern>/*</url-pattern>
+	</filter-mapping>
+
+
+	<session-config>
+		<session-timeout>60</session-timeout>
+	</session-config>
+
+	<!-- 验证码配置 -->
+	<servlet>
+		<servlet-name>PictureCheckCode</servlet-name>
+		<servlet-class>com.cat.common.servlet.PictureCheckCode</servlet-class>
+	</servlet>
+
+	<servlet-mapping>
+		<servlet-name>PictureCheckCode</servlet-name>
+		<url-pattern>/PictureCheckCode</url-pattern>
+	</servlet-mapping>
+
+	<welcome-file-list>
+		<welcome-file>index.jsp</welcome-file>
+	</welcome-file-list>
+</web-app>

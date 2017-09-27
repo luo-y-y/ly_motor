@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd"> 
+<mapper namespace="com.cat.sy.dao.SyUserDao">
+   <resultMap type="com.cat.sy.bean.SyUser" id="syUser">
+	  <id property="id" column="ID" />
+      <result property="status" column="STATUS"/>
+      <result property="userName" column="USER_NAME"/>
+      <result property="password" column="PASSWORD"/>
+      <result property="name" column="NAME"/>
+      <result property="mobile" column="MOBILE"/>
+      <result property="idNumber" column="ID_NUMBER"/>
+      <result property="sexCd" column="SEX_CD"/>
+      <result property="birthday" column="BIRTHDAY"/>
+      <result property="createTime" column="CREATE_TIME"/>
+      <result property="createUserId" column="CREATE_USER_ID"/>
+      <result property="note" column="NOTE"/>
+      <result property="msgStatus" column="MSG_STATUS"/>
+   </resultMap>
+		
+<!--***********************define end*************************-->
+   <insert id="save" parameterType="hashMap">
+     <selectKey resultType="java.lang.Integer" order="AFTER" keyProperty="id">
+       <![CDATA[SELECT LAST_INSERT_ID() AS id ]]>
+      </selectKey>
+      INSERT INTO sy_user(ID,STATUS, USER_NAME, PASSWORD,  NAME, MOBILE, ID_NUMBER,SEX_CD,BIRTHDAY,CREATE_TIME,CREATE_USER_ID,NOTE,MSG_STATUS)
+      VALUES(#{id},#{status,jdbcType=VARCHAR},#{userName,jdbcType=VARCHAR},#{password,jdbcType=VARCHAR},#{name,jdbcType=VARCHAR},#{mobile,jdbcType=VARCHAR},#{idNumber,jdbcType=VARCHAR},#{sexCd,jdbcType=VARCHAR},#{birthday,jdbcType=DATE},#{createTime,jdbcType=TIMESTAMP},#{createUserId,jdbcType=NUMERIC},#{note,jdbcType=VARCHAR},#{msgStatus,jdbcType=VARCHAR})
+   </insert>
+
+   <delete id="delete" parameterType="hashMap">
+      DELETE FROM sy_user WHERE id = #{id}
+   </delete>
+
+
+   <update id="update" parameterType="hashMap">
+      UPDATE sy_user SET STATUS=#{status,jdbcType=VARCHAR},USER_NAME=#{userName,jdbcType=VARCHAR},PASSWORD=#{password,jdbcType=VARCHAR},NAME=#{name,jdbcType=VARCHAR},MOBILE=#{mobile,jdbcType=VARCHAR},ID_NUMBER=#{idNumber,jdbcType=VARCHAR},SEX_CD=#{sexCd,jdbcType=VARCHAR},BIRTHDAY=#{birthday,jdbcType=DATE},NOTE=#{note,jdbcType=VARCHAR},MSG_STATUS=#{msgStatus,jdbcType=VARCHAR}
+      WHERE id = #{id}
+   </update>
+   
+
+   <select id="load" resultMap="syUser" parameterType="hashMap">
+      select * from sy_user where  1=1 
+       <if test="id != null">
+	         AND ID = #{id}
+	   </if>
+	   <if test="userName != null and userName !=''">
+	         AND USER_NAME = #{userName}
+	   </if>
+	   <if test="password != null and password !=''">
+	         AND PASSWORD = #{password}
+	    </if>
+     
+   </select>
+   
+   
+   <select id="findList" resultMap="syUser" parameterType="hashMap">
+     select * from sy_user where 1=1
+     	<if test="msgStatus != null and msgStatus != ''">
+	         AND MSG_STATUS = #{msgStatus}
+	   </if>
+   </select>
+
+ 
+   <sql id="page_where_sql">
+	      where 1=1
+	       <if test="status != null and status !=''">
+	         AND t.STATUS = #{status}
+	      </if>
+	      <if test="userName != null and userName !=''">
+	          AND t.USER_NAME LIKE CONCAT(CONCAT('%', #{userName}),'%')
+	      </if>
+	      <if test="text != null and text !=''">
+	          AND t.USER_NAME LIKE CONCAT(CONCAT('%', #{text}),'%')
+	      </if>
+	      order by CREATE_TIME DESC
+   </sql>
+   
+ <!--   <select id="findPageList" resultMap="syUser" parameterType="hashMap">
+    <![CDATA[ 
+     SELECT * FROM (
+     		SELECT tt.*, ROWNUM AS rowno FROM (  
+     				SELECT t.* FROM sy_user t    ]]> <include refid="page_where_sql" />  <![CDATA[ 
+     				) tt  WHERE ROWNUM <= #{oracleEnd})
+     		ttt  WHERE ttt.rowno >= #{oracleStart}
+         ]]>
+   </select> -->
+   
+   
+   <select id="findPageList" resultMap="syUser" parameterType="hashMap">
+      select * from sy_user t 
+      <include refid="page_where_sql" />  
+      <if test="mysqlStart != null">
+            limit #{mysqlStart}, #{max}
+      </if>
+   </select>
+   
+   <select id="findPageList_get_row_count" resultType="Integer">
+      SELECT count(t.id) FROM sy_user t
+      <include refid="page_where_sql" />
+   </select>
+
+
+    <update id="updateForResetPassword" parameterType="hashMap">
+      UPDATE sy_user SET PASSWORD=#{password}
+      WHERE id = #{id}
+    </update>
+    
+    
+    <update id="updatePassword" parameterType="hashMap">
+      UPDATE sy_user SET PASSWORD=#{newPassword}
+      WHERE id = #{id} and PASSWORD=#{password}
+    </update>
+    
+</mapper>

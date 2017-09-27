@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd"> 
+<mapper namespace="com.cat.sy.dao.SyRoleDao">
+   <resultMap type="com.cat.sy.bean.SyRole" id="syRole">
+	  <id property="id" column="ID" />
+      <result property="uuid" column="UUID"/>
+      <result property="isValid" column="IS_VALID"/>
+      <result property="code" column="CODE"/>
+      <result property="type" column="TYPE"/>
+      <result property="name" column="NAME"/>
+      <result property="label" column="LABEL"/>
+      <result property="iconName" column="ICON_NAME"/>
+      <result property="createTime" column="CREATE_TIME"/>
+      <result property="note" column="NOTE"/>
+   </resultMap>
+	
+<!--***********************define end*************************-->
+   <insert id="save" parameterType="hashMap">
+     <selectKey resultType="java.lang.Integer" order="AFTER" keyProperty="id">
+       <![CDATA[SELECT LAST_INSERT_ID() AS id ]]>
+      </selectKey>
+      INSERT INTO sy_role(ID,UUID,IS_VALID,CODE,TYPE,NAME,LABEL,ICON_NAME,CREATE_TIME,NOTE)
+      VALUES(#{id},#{uuid,jdbcType=VARCHAR},#{isValid,jdbcType=VARCHAR},#{code,jdbcType=VARCHAR},#{type,jdbcType=VARCHAR},#{name,jdbcType=VARCHAR},#{label,jdbcType=VARCHAR},#{iconName,jdbcType=VARCHAR},#{createTime,jdbcType=TIMESTAMP},#{note,jdbcType=VARCHAR})
+   </insert>
+
+   <delete id="delete" parameterType="hashMap">
+      DELETE FROM sy_role WHERE id = #{id}
+   </delete>
+
+
+   <update id="update" parameterType="hashMap">
+      UPDATE sy_role SET  IS_VALID=#{isValid,jdbcType=VARCHAR},CODE=#{code,jdbcType=VARCHAR},TYPE=#{type,jdbcType=VARCHAR},NAME=#{name,jdbcType=VARCHAR},LABEL=#{label,jdbcType=VARCHAR},ICON_NAME=#{iconName,jdbcType=VARCHAR},CREATE_TIME=#{createTime,jdbcType=TIMESTAMP},NOTE=#{note,jdbcType=VARCHAR}
+      WHERE id = #{id}
+   </update>
+   
+
+   <select id="load" resultMap="syRole" parameterType="hashMap">
+      select * from sy_role where id = #{id}
+   </select>
+   
+   
+   <select id="findList" resultMap="syRole" parameterType="hashMap">
+     select * from sy_role 
+   </select>
+
+ 
+   <sql id="page_where_sql">
+	      where 1=1
+	       <if test="code != null and code !=''">
+	         AND t.CODE = #{code}
+	      </if>
+	      order by CREATE_TIME DESC
+   </sql>
+   
+  <!--  <select id="findPageList" resultMap="syRole" parameterType="hashMap">
+    <![CDATA[ 
+     SELECT * FROM (
+     		SELECT tt.*, ROWNUM AS rowno FROM (  
+     				SELECT t.* FROM sy_role t    ]]> <include refid="page_where_sql" />  <![CDATA[ 
+     				) tt  WHERE ROWNUM <= #{oracleEnd})
+     		ttt  WHERE ttt.rowno >= #{oracleStart}
+         ]]>
+   </select> -->
+   
+    <select id="findPageList" resultMap="syRole" parameterType="hashMap">
+      select * from sy_role t 
+      <include refid="page_where_sql" />  
+      <if test="mysqlStart != null">
+            limit #{mysqlStart}, #{max}
+      </if>
+   </select>
+   
+   <select id="findPageList_get_row_count" resultType="Integer">
+      SELECT count(t.id) FROM sy_role t
+      <include refid="page_where_sql" />
+   </select>
+
+</mapper>

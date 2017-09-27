@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd"> 
+<mapper namespace="com.luoy.motor.dao.user.MoUserDao">
+   <resultMap type="com.luoy.motor.bean.user.MoUser" id="moUserMap">
+  <id property="id" column="ID" />
+      <result property="tel" column="TEL"/>
+      <result property="userName" column="USER_NAME"/>
+      <result property="password" column="PASSWORD"/>
+      <result property="realName" column="REAL_NAME"/>
+      <result property="idCard" column="ID_CARD"/>
+      <result property="headUrl" column="HEAD_URL"/>
+      <result property="status" column="STATUS"/>
+      <result property="times" column="TIMES"/>
+      <result property="timesDate" column="TIMES_DATE"/>
+      <result property="type" column="TYPE"/>
+      <result property="msgCode" column="MSG_CODE"/>
+      <result property="msgCodeTime" column="MSG_CODE_TIME"/>
+      <result property="token" column="TOKEN"/>
+      <result property="tokenTime" column="TOKEN_TIME"/>
+      <result property="createTime" column="CREATE_TIME"/>
+      <result property="updateTime" column="UPDATE_TIME"/>
+
+   </resultMap>
+
+<insert id="save" parameterType="hashMap">
+          <selectKey resultType="java.lang.Integer" order="AFTER" keyProperty="id">
+       <![CDATA[SELECT LAST_INSERT_ID() AS id ]]>
+      </selectKey>
+                  INSERT INTO mo_user ( ID ,  TEL ,  USER_NAME ,  PASSWORD ,  REAL_NAME ,  ID_CARD ,  HEAD_URL ,  STATUS ,  TIMES ,  TIMES_DATE ,  TYPE ,  MSG_CODE ,  MSG_CODE_TIME ,  TOKEN ,  TOKEN_TIME ,  CREATE_TIME ,  UPDATE_TIME)
+      VALUES(#{id},#{tel},#{userName},#{password},#{realName},#{idCard},#{headUrl},#{status},#{times},#{timesDate},#{type},#{msgCode},#{msgCodeTime},#{token},#{tokenTime},#{createTime},#{updateTime})
+   </insert>
+   
+    <delete id="delete" parameterType="hashMap">
+      DELETE FROM mo_user  WHERE id = #{id}
+   </delete>
+
+   <update id="update" parameterType="hashMap">
+      UPDATE mo_user SET TEL=#{tel} , USER_NAME=#{userName} , PASSWORD=#{password} , REAL_NAME=#{realName} , ID_CARD=#{idCard} , HEAD_URL=#{headUrl} , STATUS=#{status} , TIMES=#{times} , TIMES_DATE=#{timesDate} , TYPE=#{type} , MSG_CODE=#{msgCode} , MSG_CODE_TIME=#{msgCodeTime} , TOKEN=#{token} , TOKEN_TIME=#{tokenTime} , CREATE_TIME=#{createTime} , UPDATE_TIME=#{updateTime}      WHERE id = #{id}
+   </update>
+   
+   
+   <select id="load" resultMap="moUserMap" parameterType="hashMap">
+      select * from mo_user where  1=1 
+       <if test="id != null">
+         AND id = #{id}
+       </if>
+       <if test="tel != null">
+         AND TEL = #{tel}
+       </if>
+       <if test="password != null">
+         AND PASSWORD = #{password}
+       </if>
+       <if test="userName != null">
+         AND USER_NAME = #{userName}
+       </if>  limit 1
+    </select>
+   
+   <select id="findList" resultMap="moUserMap" parameterType="hashMap">
+     select * from mo_user where 1=1
+   </select>
+   
+   <sql id="page_where_sql">
+      where 1=1
+        <if test="tel != null">
+         AND TEL = #{tel}
+       </if>
+       <if test="userName != null">
+         AND USER_NAME = #{userName}
+       </if>
+       order by CREATE_TIME DESC 
+   </sql>
+   
+   <select id="findPageList" resultMap="moUserMap" parameterType="hashMap">
+         select * from mo_user t 
+      <include refid="page_where_sql" />  
+      <if test="mysqlStart != null">
+            limit #{mysqlStart}, #{max}
+      </if>
+           </select>
+   
+   <select id="findPageList_get_row_count" resultType="Integer">
+      SELECT count(t.id) FROM mo_user t
+      <include refid="page_where_sql" />
+   </select>
+ 
+</mapper>
