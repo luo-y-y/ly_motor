@@ -37,12 +37,16 @@ public class FileAction extends ExtBaseAction {
    public RMsgResponse extFileUpload() {
       try{
          String base64FileStr = RString.toString(params.get("base64FileStr"));
+         String type = RString.toString(params.get("type"));
          if(RString.isBlank(base64FileStr)){
             return new RMsgResponse(EMsg.Param_NotFount.code(), EMsg.Param_NotFount.value());
          }
+         if(RString.isBlank(type)){
+            type = "jpeg";
+         }
          String  fileBasePath =  RSystemConfig.getValue("fileBasePath");
          String  fileSavePath =  RSystemConfig.getValue("fileSavePath");
-         String url = ImgeUtil.saveFile(base64FileStr, fileBasePath, fileSavePath, ".png");
+         String url = ImgeUtil.saveFile(base64FileStr, fileBasePath, fileSavePath, "."+type);
          Map<String, Object> map = new HashMap<String, Object>();
          map.put("fileRdfUrl", RSystemConfig.getValue("fileHttpUrl"));
          map.put("fileUrl", url);

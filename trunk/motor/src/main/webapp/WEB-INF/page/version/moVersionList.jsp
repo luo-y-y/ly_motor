@@ -19,6 +19,12 @@
 							<option value="y">强制更新</option>
 							<option value="n">非强制更新</option>
 					</select></td>
+					<td></td>
+					<td><a href="javascript:void(0);" class="easyui-linkbutton"
+						data-options="iconCls:'icon-search',toggle:true" id="searchBtn">查询</a>
+						<a href="javascript:void(0);" class="easyui-linkbutton"
+						data-options="iconCls:'icon-cancel',toggle:true" id="clearBtn">清除</a>
+					</td>
 				</tr>
 			</table>
 		</form>
@@ -43,6 +49,7 @@
 				<th data-options="field:'versionName',width:120">版本名称</th>
 				<th data-options="field:'versionCode',width:120">版本编码</th>
 				<th data-options="field:'isForce',width:120,formatter:formatForeStatus">状态</th>
+				<th data-options="field:'url',width:120">下载地址</th>
 				<th data-options="field:'sysType',width:120">系统类型</th>
 				<th data-options="field:'createTime',width:110">创建时间</th> 
 				<th data-options="field:'updateTime',width:110">修改时间</th> 

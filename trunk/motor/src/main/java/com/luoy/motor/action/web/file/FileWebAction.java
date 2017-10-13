@@ -7,7 +7,6 @@ import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.apache.commons.codec.binary.Base64;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,6 +19,7 @@ import com.cat.common.fastdfs.RFds;
 import com.cat.common.img.ImageCompressionUtil;
 import com.cat.common.img.ImgeUtil;
 import com.cat.common.json.RJson;
+import com.cat.common.lang.RString;
 import com.cat.common.listener.RSystemConfig;
 import com.cat.sy.action.base.WebBaseAction;
 
@@ -64,10 +64,14 @@ public class FileWebAction
          }
          String fileName = mFile.getOriginalFilename();
          _logger.info("uploadImagefile name ="+fileName);
+         String extName = getFileExtName(fileName);
+         if(RString.isBlank(extName)){
+            extName = "png";
+         }
          // 文件上传
          String  fileBasePath =  RSystemConfig.getValue("fileBasePath");
          String  fileSavePath =  RSystemConfig.getValue("fileSavePath");
-         String fileUrl = ImgeUtil.saveFile(Base64.encodeBase64String(mFile.getBytes()), fileBasePath, fileSavePath, ".png");
+         String fileUrl = ImgeUtil.saveFile(mFile.getBytes(), fileBasePath, fileSavePath, "."+extName);
         // String fileUrl = RFds.getInstance().uploadFile(mFile.getBytes(), fileName);
          Map<String, Object> map = new HashMap<String, Object>();
          map.put("code", "0");
@@ -83,7 +87,51 @@ public class FileWebAction
       }
    }
 
-  
+   @RequestMapping("uploadFile")
+   public void uploadFile() throws RequestException{
+      try{
+         MultipartHttpServletRequest mRequest = (MultipartHttpServletRequest) request;
+         MultipartFile mFile = mRequest.getFile("fileName");
+         if(null == mFile){
+            printWriterJson(new RResult(RResult.paramNull));
+            return;
+         }
+         String fileName = mFile.getOriginalFilename();
+         _logger.info("uploadImagefile name ="+fileName);
+         String extName = getFileExtName(fileName);
+         // 文件上传
+         String  fileBasePath =  RSystemConfig.getValue("fileBasePath");
+         String  fileSavePath =  RSystemConfig.getValue("appFileSavePath");
+         String fileUrl = ImgeUtil.saveFile(mFile.getBytes(), fileBasePath, fileSavePath, "."+extName);
+        // String fileUrl = RFds.getInstance().uploadFile(mFile.getBytes(), fileName);
+         Map<String, Object> map = new HashMap<String, Object>();
+         map.put("code", "0");
+         map.put("success", true);
+         map.put("fileUrl", fileUrl);
+         map.put("fileRdfUrl", RSystemConfig.getValue("fastdfsUrl"));
+         printWriterJson(map);
+         _logger.info("uploadImage success uploadImage="+ fileUrl);
+      }catch(Exception e){
+         e.printStackTrace();
+         _logger.info("uploadImage error", e);
+         printWriterJson(new RResult(RResult.MSG_FAIL));
+      }
+   }
+   
+   /**
+    * 获取文件扩展名
+    * 
+    * @param name
+    *            文件名
+    * @return
+    */
+   private String getFileExtName(String name) {
+      String extName = null;
+      if (name != null && name.contains(".")) {
+         extName = name.substring(name.lastIndexOf(".") + 1);
+      }
+      return extName;
+   }
 
    /**
     * 上传图片带完整地址  且压缩

@@ -48,6 +48,11 @@ public class RMsgResponse implements java.io.Serializable{
     */
    private String isForce = (String) ThreadLocalHelper.getVale("isForce"); ;
    
+   /**
+    * 下载地址
+    */
+   private String dowloadUrl = (String) ThreadLocalHelper.getVale("dowloadUrl"); ;
+   
    RMsgResponse(){
    }
    
@@ -124,6 +129,16 @@ public class RMsgResponse implements java.io.Serializable{
    
    public void setIsForce(String isForce){
       this.isForce = isForce;
+   }
+
+   
+   public String getDowloadUrl(){
+      return dowloadUrl;
+   }
+
+   
+   public void setDowloadUrl(String dowloadUrl){
+      this.dowloadUrl = dowloadUrl;
    }
    
 }

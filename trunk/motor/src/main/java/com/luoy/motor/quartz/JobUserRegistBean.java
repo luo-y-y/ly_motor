@@ -4,11 +4,7 @@ import org.quartz.DisallowConcurrentExecution;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 import org.quartz.PersistJobDataAfterExecution;
-import org.quartz.SchedulerException;
-import org.springframework.context.ApplicationContext;
 import org.springframework.scheduling.quartz.QuartzJobBean;
-
-import com.cat.common.lang.RDate;
 
 
 
@@ -21,8 +17,8 @@ public class JobUserRegistBean
    @Override
    protected void executeInternal(JobExecutionContext jobContext)
          throws JobExecutionException{
-      try{
-         ApplicationContext applicationContext = (ApplicationContext) jobContext.getScheduler().getContext().get("applicationContextKey");
+      /*try{
+//         ApplicationContext applicationContext = (ApplicationContext) jobContext.getScheduler().getContext().get("applicationContextKey");
          //OrderPayService orderPayService = (OrderPayService) applicationContext.getBean("orderPayService");
          String date = RDate.getCurrentTimeSssStr();
          for(int i = 0; i < 120; i++){
@@ -36,7 +32,7 @@ public class JobUserRegistBean
          System.out.println(date+"任务结束");
       }catch(SchedulerException e){
          e.printStackTrace();
-      }
+      }*/
 
    }
 
