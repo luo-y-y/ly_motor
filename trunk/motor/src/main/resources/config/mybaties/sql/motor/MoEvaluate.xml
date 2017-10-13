@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd"> 
+<mapper namespace="com.luoy.motor.dao.motor.MoEvaluateDao">
+   <resultMap type="com.luoy.motor.bean.motor.MoEvaluate" id="moEvaluateMap">
+  <id property="id" column="ID" />
+      <result property="pid" column="PID"/>
+      <result property="userId" column="USER_ID"/>
+      <result property="tel" column="TEL"/>
+      <result property="content" column="CONTENT"/>
+      <result property="createTime" column="CREATE_TIME"/>
+
+   </resultMap>
+
+<insert id="save" parameterType="hashMap">
+          <selectKey resultType="java.lang.Integer" order="AFTER" keyProperty="id">
+       <![CDATA[SELECT LAST_INSERT_ID() AS id ]]>
+      </selectKey>
+                  INSERT INTO mo_evaluate ( ID ,  PID ,  USER_ID ,  TEL ,  CONTENT ,  CREATE_TIME)
+      VALUES(#{id},#{pid},#{userId},#{tel},#{content},#{createTime})
+   </insert>
+   
+    <delete id="delete" parameterType="hashMap">
+      DELETE FROM mo_evaluate  WHERE id = #{id}
+   </delete>
+
+   <update id="update" parameterType="hashMap">
+      UPDATE mo_evaluate SET PID=#{pid} , USER_ID=#{userId} , TEL=#{tel} , CONTENT=#{content} , CREATE_TIME=#{createTime}      WHERE id = #{id}
+   </update>
+   
+   
+   <select id="load" resultMap="moEvaluateMap" parameterType="hashMap">
+      select * from mo_evaluate where  1=1 
+       <if test="id != null">
+         AND id = #{id}
+       </if>
+             limit 1
+                    </select>
+   
+   <select id="findList" resultMap="moEvaluateMap" parameterType="hashMap">
+     select * from mo_evaluate where 1=1
+   </select>
+   
+   <sql id="page_where_sql">
+      where 1=1
+      <if test="pid != null">
+         AND PID = #{pid}
+       </if>
+       <if test="userId != null">
+         AND USER_ID = #{userId}
+       </if>
+     order by CREATE_TIME DESC 
+   </sql>
+   
+   <select id="findPageList" resultMap="moEvaluateMap" parameterType="hashMap">
+         select * from mo_evaluate t 
+      <include refid="page_where_sql" />  
+      <if test="mysqlStart != null">
+            limit #{mysqlStart}, #{max}
+      </if>
+           </select>
+   
+   <select id="findPageList_get_row_count" resultType="Integer">
+      SELECT count(t.id) FROM mo_evaluate t
+      <include refid="page_where_sql" />
+   </select>
+ 
+</mapper>
