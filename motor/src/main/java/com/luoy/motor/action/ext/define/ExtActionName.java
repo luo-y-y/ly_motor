@@ -42,5 +42,101 @@ public class ExtActionName {
       
 	}
 
+	public class Motor {
+	   
+      /**
+       * 添加
+       */
+      public static final String Motor_add = "extMotorAdd";
+      
+      
+      /**
+       * 下架
+       */
+      public static final String Motor_off = "extMotorOff";
+      
+      /**
+       * 已售出
+       */
+      public static final String Motor_sold = "extMotorSold";
+      
+      
+      /**
+       * 上架
+       */
+      public static final String Motor_on = "extMotorOn";
+      
+      /**
+       * 修改
+       */
+      public static final String Motor_update = "extMotorUpdate";
+      
+      /**
+       * 分页查询
+       */
+      public static final String Motor_findPage = "extMotorFindPage";
+      
+      
+      /**
+       * 查询单条
+       */
+      public static final String Motor_Load = "extMotorLoad";
+      
+      /**
+       * 标记热门
+       */
+      public static final String Motor_Hot = "extMotorHot";
+      
+      
+      /**
+       * 取消热门
+       */
+      public static final String Motor_unHot = "extMotorUnHot";
+      
+   }
 	
+public class Evaluate {
+      
+      /**
+       * 添加
+       */
+      public static final String Evaluate_Add = "extEvaluateAdd";
+      
+      
+      /**
+       * 删除
+       */
+      public static final String Evaluate_Delete = "extEvaluateDelete";
+      
+      /**
+       * 由摩托查询评价
+       */
+      public static final String Evaluate_FindPageByMo = "extEvaluateFindPageByMo";
+      
+      
+      /**
+       * 查询个人砍价记录
+       */
+      public static final String Evaluate_FindPageByUser = "extEvaluateFindPageByUser";
+   }
+
+
+   public class Collect {
+      
+      /**
+    * 添加
+    */
+   public static final String Collect_Add = "extCollectAdd";
+   
+   
+   /**
+    * 删除
+    */
+   public static final String Collect_Delete = "extCollectDelete";
+   
+   /**
+    * 查询个人砍价记录
+    */
+   public static final String Collect_FindPageByUser = "extCollectFindPage";
+   }
 }

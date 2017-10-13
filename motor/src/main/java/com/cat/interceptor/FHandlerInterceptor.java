@@ -34,7 +34,8 @@ public class FHandlerInterceptor
 
    private Logger _logger = Logger.getLogger(this.getClass());
 
-   private static final List<String> noLoginMethod = Arrays.asList(new String[]{"extTelSendCode","extTelMsgLogin","extTelPassLogin","extFileuUpload"});
+   private static final List<String> noLoginMethod = Arrays.asList(new String[]{"extTelSendCode","extTelMsgLogin","extTelPassLogin","extFileuUpload",
+         "extMotorFindPage","extMotorLoad"});
 
    @Autowired
    private MoUserService moUserService;
@@ -77,6 +78,7 @@ public class FHandlerInterceptor
             ThreadLocalHelper.setVale("version", version.getVersionName());
             ThreadLocalHelper.setVale("versionCode", version.getVersionCode());
             ThreadLocalHelper.setVale("isForce", version.getIsForce());
+            ThreadLocalHelper.setVale("dowloadUrl", version.getUrl());
          }
          
          /**

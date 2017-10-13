@@ -119,11 +119,6 @@ function bannerPicMethod(data){
 	$('#picUrl').val(data.fileUrl);
 }
 
-function bannerPicMethod(data){
-	$('#picUrl').val(data.fileUrl);
-}
-
-
 function form_imgShow(o,imgObj){
 	   var  ts = new Date().getTime();
 	   var dialogHtml = '<div id="imgShow_'+ts+'"  style="width:90%;padding:10px;"  >'+

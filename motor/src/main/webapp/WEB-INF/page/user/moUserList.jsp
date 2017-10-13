@@ -12,13 +12,15 @@
 		<form id="searchForm" method="post">
 			<table class="form-search">
 				<tr>
-					<td>更新类型：</td>
-					<td><select class="easyui-combobox" id="status" name="isForce" style="width: 226px;"
-						data-options="editable:false,prompt:'请选择类型'">
-							<option value="">请选择</option>
-							<option value="y">强制更新</option>
-							<option value="n">非强制更新</option>
-					</select></td>
+					<td>手机号：</td>
+					<td><input class="easyui-textbox" type="text"
+						name="tel"></input></td>
+					<td></td>
+					<td><a href="javascript:void(0);" class="easyui-linkbutton"
+						data-options="iconCls:'icon-search',toggle:true" id="searchBtn">查询</a>
+						<a href="javascript:void(0);" class="easyui-linkbutton"
+						data-options="iconCls:'icon-cancel',toggle:true" id="clearBtn">清除</a>
+					</td>
 				</tr>
 			</table>
 		</form>

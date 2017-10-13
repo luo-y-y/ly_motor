@@ -19,6 +19,12 @@
 							<option value="on">上线</option>
 							<option value="off">下线</option>
 					</select></td>
+					<td></td>
+					<td><a href="javascript:void(0);" class="easyui-linkbutton"
+						data-options="iconCls:'icon-search',toggle:true" id="searchBtn">查询</a>
+						<a href="javascript:void(0);" class="easyui-linkbutton"
+						data-options="iconCls:'icon-cancel',toggle:true" id="clearBtn">清除</a>
+					</td>
 				</tr>
 			</table>
 		</form>

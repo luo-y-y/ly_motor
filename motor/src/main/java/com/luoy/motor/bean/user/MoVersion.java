@@ -34,6 +34,10 @@ public class MoVersion
    private String isForce;
 
    /**
+    * 下载地址，只有安卓有地址
+    */
+   private String url;
+   /**
     * 系统版本
     * ios android
     */
@@ -109,6 +113,16 @@ public class MoVersion
 
    public void setUpdateTime(Timestamp updateTime){
       this.updateTime = updateTime;
+   }
+
+   
+   public String getUrl(){
+      return url;
+   }
+
+   
+   public void setUrl(String url){
+      this.url = url;
    }
  
 }

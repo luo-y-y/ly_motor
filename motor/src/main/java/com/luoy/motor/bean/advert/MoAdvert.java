@@ -1,6 +1,8 @@
 
 package com.luoy.motor.bean.advert;
 import java.sql.Timestamp;
+
+import com.cat.common.listener.RSystemConfig;
 /**
  * 表名：[mo_advert]广告
  * @author luoyang
@@ -48,6 +50,10 @@ public class MoAdvert
    private Timestamp updateTime;
 
 
+   /**
+    * 地址
+    */
+   private String  fileRdfUrl = RSystemConfig.getValue("fileHttpUrl");
 
    public Integer getId(){
       return id;
@@ -103,6 +109,16 @@ public class MoAdvert
 
    public void setUpdateTime(Timestamp updateTime){
       this.updateTime = updateTime;
+   }
+
+   
+   public String getFileRdfUrl(){
+      return fileRdfUrl;
+   }
+
+   
+   public void setFileRdfUrl(String fileRdfUrl){
+      this.fileRdfUrl = fileRdfUrl;
    }
  
 }

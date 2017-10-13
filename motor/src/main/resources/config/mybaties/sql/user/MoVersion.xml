@@ -7,6 +7,7 @@
       <result property="versionName" column="VERSION_NAME"/>
       <result property="versionCode" column="VERSION_CODE"/>
       <result property="isForce" column="IS_FORCE"/>
+      <result property="url" column="URL"/>
       <result property="sysType" column="SYS_TYPE"/>
       <result property="createTime" column="CREATE_TIME"/>
       <result property="updateTime" column="UPDATE_TIME"/>
@@ -17,8 +18,8 @@
           <selectKey resultType="java.lang.Integer" order="AFTER" keyProperty="id">
        <![CDATA[SELECT LAST_INSERT_ID() AS id ]]>
       </selectKey>
-                  INSERT INTO mo_version ( ID ,  VERSION_NAME ,  VERSION_CODE ,  IS_FORCE ,  SYS_TYPE ,  CREATE_TIME ,  UPDATE_TIME)
-      VALUES(#{id},#{versionName},#{versionCode},#{isForce},#{sysType},#{createTime},#{updateTime})
+                  INSERT INTO mo_version ( ID ,  VERSION_NAME ,  VERSION_CODE ,  IS_FORCE ,URL,  SYS_TYPE ,  CREATE_TIME ,  UPDATE_TIME)
+      VALUES(#{id},#{versionName},#{versionCode},#{isForce},#{url},#{sysType},#{createTime},#{updateTime})
    </insert>
    
     <delete id="delete" parameterType="hashMap">
@@ -26,7 +27,7 @@
    </delete>
 
    <update id="update" parameterType="hashMap">
-      UPDATE mo_version SET VERSION_NAME=#{versionName} , VERSION_CODE=#{versionCode} , IS_FORCE=#{isForce} , SYS_TYPE=#{sysType} , CREATE_TIME=#{createTime} , UPDATE_TIME=#{updateTime}      WHERE id = #{id}
+      UPDATE mo_version SET VERSION_NAME=#{versionName} , VERSION_CODE=#{versionCode} , IS_FORCE=#{isForce} ,URL=#{url} , SYS_TYPE=#{sysType} , CREATE_TIME=#{createTime} , UPDATE_TIME=#{updateTime}      WHERE id = #{id}
    </update>
    
    

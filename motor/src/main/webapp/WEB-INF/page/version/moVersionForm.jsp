@@ -63,6 +63,13 @@
 				<td><input class="easyui-validatebox" type="text" name="versionCode" data-options="required:true" /></td>
 			</tr>
 			<tr>
+				<td class="none_right">下载地址：</td>
+				<td>
+					<input id="url" class="easyui-validatebox" type="text" name="url" style="width:225px;" />
+					<input type="button" id="bannerUrl" value="上传" />
+				</td>
+			</tr>
+			<tr>
 			<td class="none_right">系统类型：</td>
 				<td><select class="easyui-combobox" name="sysType"  style="width:225px;">
 										<option value="ios">IOS</option>
@@ -107,10 +114,13 @@ $(function(){
 	tab_mask_hide();
 	form_submit($("#submitButton"), 'verform', 'mo/version/doSave.do');
 	form_close_tab($('#closeButton'));
-
+	form_fileUpload($('#bannerUrl'),'file/uploadFile.do',urlSetVal)
 });
 
 
+function urlSetVal(data){
+$('#url').val(data.fileUrl);
+}
 
 
 </script>
