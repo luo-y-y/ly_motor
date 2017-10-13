@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd"> 
+<mapper namespace="com.luoy.motor.dao.motor.MoCollectDao">
+   <resultMap type="com.luoy.motor.bean.motor.MoCollect" id="moCollectMap">
+  <id property="id" column="ID" />
+      <result property="userId" column="USER_ID"/>
+      <result property="pid" column="pid"/>
+      <result property="createTime" column="CREATE_TIME"/>
+
+   </resultMap>
+
+<insert id="save" parameterType="hashMap">
+          <selectKey resultType="java.lang.Integer" order="AFTER" keyProperty="id">
+       <![CDATA[SELECT LAST_INSERT_ID() AS id ]]>
+      </selectKey>
+                  INSERT INTO mo_collect ( ID ,  USER_ID ,  pid ,  CREATE_TIME)
+      VALUES(#{id},#{userId},#{pid},#{createTime})
+   </insert>
+   
+    <delete id="delete" parameterType="hashMap">
+      DELETE FROM mo_collect  WHERE id = #{id}
+   </delete>
+   
+    <delete id="deleteByPid" parameterType="hashMap">
+      DELETE FROM mo_collect  WHERE USER_ID = #{userId} and PID = #{pid} 
+   </delete>
+
+   <update id="update" parameterType="hashMap">
+      UPDATE mo_collect SET USER_ID=#{userId} , pid=#{pid} , CREATE_TIME=#{createTime}      WHERE id = #{id}
+   </update>
+   
+   
+   <select id="load" resultMap="moCollectMap" parameterType="hashMap">
+      select * from mo_collect where  1=1 
+       <if test="id != null">
+         AND id = #{id}
+        </if>
+        <if test="userId != null">
+         AND USER_ID = #{userId}
+        </if>
+        <if test="pid != null">
+         AND pid = #{pid}
+        </if>
+        limit 1
+    </select>
+   
+   <select id="findList" resultMap="moCollectMap" parameterType="hashMap">
+     select * from mo_collect where 1=1
+   </select>
+   
+   <sql id="page_where_sql">
+      where 1=1
+      <!--order by CREATE_TIME DESC-->
+   </sql>
+   
+   <select id="findPageList" resultMap="moCollectMap" parameterType="hashMap">
+         select * from mo_collect t 
+      <include refid="page_where_sql" />  
+      <if test="mysqlStart != null">
+            limit #{mysqlStart}, #{max}
+      </if>
+           </select>
+   
+   <select id="findPageList_get_row_count" resultType="Integer">
+      SELECT count(t.id) FROM mo_collect t
+      <include refid="page_where_sql" />
+   </select>
+ 
+</mapper>

@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd"> 
+<mapper namespace="com.luoy.motor.dao.motor.MoMotorDao">
+   <resultMap type="com.luoy.motor.bean.motor.MoMotor" id="moMotorMap">
+  <id property="id" column="ID" />
+      <result property="userId" column="USER_ID"/>
+      <result property="title" column="TITLE"/>
+      <result property="content" column="CONTENT"/>
+      <result property="status" column="STATUS"/>
+      <result property="price" column="PRICE"/>
+      <result property="oriPrice" column="ORI_PRICE"/>
+      <result property="tel" column="TEL"/>
+      <result property="mileage" column="MILEAGE"/>
+      <result property="brand" column="BRAND"/>
+      <result property="weight" column="WEIGHT"/>
+      <result property="hasAbs" column="HAS_ABS"/>
+      <result property="area" column="AREA"/>
+      <result property="productDate" column="PRODUCT_DATE"/>
+      <result property="buyDate" column="BUY_DATE"/>
+      <result property="imgUrls" column="IMG_URLS"/>
+      <result property="driLicense" column="DRI_LICENSE"/>
+      <result property="invoice" column="INVOICE"/>
+      <result property="isHot" column="IS_HOT"/>
+      <result property="createTime" column="CREATE_TIME"/>
+      <result property="updateTime" column="UPDATE_TIME"/>
+      <result property="isCollect" column="IS_COLLECT"/>
+   </resultMap>
+
+   <insert id="save" parameterType="hashMap">
+          <selectKey resultType="java.lang.Integer" order="AFTER" keyProperty="id">
+       <![CDATA[SELECT LAST_INSERT_ID() AS id ]]>
+      </selectKey>
+                  INSERT INTO mo_motor ( ID ,  USER_ID ,  TITLE ,  CONTENT ,  STATUS ,  PRICE ,  ORI_PRICE ,  TEL ,  MILEAGE ,  BRAND ,  WEIGHT ,  HAS_ABS ,  AREA ,  PRODUCT_DATE ,  BUY_DATE ,  IMG_URLS ,  DRI_LICENSE ,  INVOICE , IS_HOT, CREATE_TIME ,  UPDATE_TIME)
+      VALUES(#{id},#{userId},#{title},#{content},#{status},#{price},#{oriPrice},#{tel},#{mileage},#{brand},#{weight},#{hasAbs},#{area},#{productDate},#{buyDate},#{imgUrls},#{driLicense},#{invoice},#{isHot},#{createTime},#{updateTime})
+   </insert>
+   
+    <delete id="delete" parameterType="hashMap">
+      DELETE FROM mo_motor  WHERE id = #{id}
+   </delete>
+
+   <update id="update" parameterType="hashMap">
+      UPDATE mo_motor SET USER_ID=#{userId} , TITLE=#{title} , CONTENT=#{content} , STATUS=#{status} , PRICE=#{price} , ORI_PRICE=#{oriPrice} , TEL=#{tel} , MILEAGE=#{mileage} , BRAND=#{brand} , WEIGHT=#{weight} , HAS_ABS=#{hasAbs} , AREA=#{area} , PRODUCT_DATE=#{productDate} , BUY_DATE=#{buyDate} , IMG_URLS=#{imgUrls} , DRI_LICENSE=#{driLicense} , INVOICE=#{invoice} , IS_HOT=#{isHot},CREATE_TIME=#{createTime} , UPDATE_TIME=#{updateTime}      WHERE id = #{id}
+   </update>
+   
+   
+   <select id="load" resultMap="moMotorMap" parameterType="hashMap">
+      select * <include refid="collect_sql" /> from mo_motor where  1=1 
+       <if test="id != null">
+         AND id = #{id}
+       </if>
+      limit 1
+    </select>
+   
+   <select id="findList" resultMap="moMotorMap" parameterType="hashMap">
+     select * <include refid="collect_sql" /> from mo_motor where 1=1
+   </select>
+   
+   <sql id="page_where_sql">
+      where 1=1
+       <if test="userId != null">
+         AND USER_ID = #{userId}
+       </if>
+       <if test="status != null">
+         AND STATUS = #{status}
+       </if>
+       <if test="brand != null">
+         AND BRAND = #{brand}
+       </if>
+       <if test="area != null">
+         AND AREA = #{area}
+       </if>
+       <if test="isHot != null">
+         AND IS_HOT = #{isHot}
+       </if>
+        <if test="title != null  and title != ''">
+            AND TITLE   LIKE CONCAT('%', #{title},'%')
+       </if>
+       <if test="minPrice != null  and minPrice != ''">
+            <![CDATA[AND PRICE  >= #{minPrice} ]]>
+       </if>
+       <if test="maxPrice != null  and maxPrice != ''">
+            <![CDATA[AND PRICE  <= #{maxPrice} ]]>
+       </if>
+       <if test="minMileage != null  and minMileage != ''">
+            <![CDATA[AND MILEAGE  >= #{minMileage} ]]>
+       </if>
+       <if test="maxMileage != null  and maxMileage != ''">
+            <![CDATA[AND MILEAGE  <= #{maxMileage} ]]>
+       </if>
+       
+        <if test="minProductDate != null  and minProductDate != ''">
+            <![CDATA[AND PRODUCT_DATE  >= #{minProductDate} ]]>
+       </if>
+       <if test="maxProductDate != null  and maxProductDate != ''">
+            <![CDATA[AND PRODUCT_DATE  <= #{maxProductDate} ]]>
+       </if>
+       <if test="priceKey != null  and priceOrder != null">
+            <![CDATA[ order by ${priceKey} ${priceOrder}  ]]>
+       </if>
+       <if test="priceKey == null  or priceOrder == null">
+            <![CDATA[  order by CREATE_TIME DESC  ]]>
+       </if>
+     
+   </sql>
+   
+   <select id="findPageList" resultMap="moMotorMap" parameterType="hashMap">
+         select t.*  <include refid="collect_sql" /> from mo_motor t 
+      <include refid="page_where_sql" />  
+      <if test="mysqlStart != null">
+            limit #{mysqlStart}, #{max}
+      </if>
+           </select>
+   
+   <select id="findPageList_get_row_count" resultType="Integer">
+      SELECT count(t.id) FROM mo_motor t
+      <include refid="page_where_sql" />
+   </select>
+ 
+ 
+ 
+   <update id="updateForStatus" parameterType="hashMap">
+      UPDATE mo_motor SET  STATUS=#{status} , UPDATE_TIME=#{updateTime}      WHERE id = #{id}
+   </update>
+   
+     <update id="updateForHot" parameterType="hashMap">
+      UPDATE mo_motor SET  IS_HOT=#{isHot} , UPDATE_TIME=#{updateTime}      WHERE id = #{id}
+   </update>
+   
+   
+   <select id="findPageListForEva" resultMap="moMotorMap" parameterType="hashMap">
+         select t.* <include refid="collect_sql" /> from mo_motor t left join mo_evaluate t1 on t.id = t1.pid  where t1.USER_ID = #{userId} order by t.create_time
+      <if test="mysqlStart != null">
+            limit #{mysqlStart}, #{max}
+      </if>
+   </select>
+   
+   <select id="findPageListForEva_get_row_count" resultType="Integer">
+      select count(t.id) from mo_motor t left join mo_evaluate t1 on t.id = t1.pid  where t1.USER_ID = #{userId} order by t.create_time
+   </select>
+   
+   
+   <select id="findPageListForCollect" resultMap="moMotorMap" parameterType="hashMap">
+         select t.* <include refid="collect_sql" /> from mo_motor t left join mo_collect t1 on t.id = t1.pid  where t1.USER_ID = #{userId} order by t.create_time
+      <if test="mysqlStart != null">
+            limit #{mysqlStart}, #{max}
+      </if>
+   </select>
+   
+   <select id="findPageListForCollect_get_row_count" resultType="Integer">
+   select count(t.id) from mo_motor t left join mo_collect t1 on t.id = t1.pid  where t1.USER_ID = #{userId} order by t.create_time
+   </select>
+   
+   <sql id="collect_sql">
+      <if test="collectUserId != null">
+       ,(select count(b.id) from mo_collect  b where b.USER_ID  = #{collectUserId} and t.id = b.pid ) as IS_COLLECT
+      </if>
+   </sql>
+   
+</mapper>
